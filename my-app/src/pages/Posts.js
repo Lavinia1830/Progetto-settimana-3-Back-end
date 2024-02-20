@@ -7,6 +7,8 @@ const urlAPI = 'http://localhost/progetto_settimana3_backend/wp/wp-json/wp/v2/';
 
 export default function Posts() {
     const [posts, setPosts] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+
     console.log(posts)
     useEffect(() => {
         fetchPosts();
@@ -22,14 +24,28 @@ export default function Posts() {
         }
     };
 
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const filteredPosts = posts.filter(post => {
+        return post.title.rendered.toLowerCase().includes(searchQuery.toLowerCase());
+    });
 
     return (
         <>
             <NavBar />
             <Container>
                 <div className="posts">
-                <h1 className="my-3">Posts Page Wordpress</h1>
-                    {posts.map((post, index) => (
+                    <h1 className="my-3">Posts Page Wordpress</h1>
+                    <input
+                        type="text"
+                        placeholder="Search posts..."
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        className='w-100'
+                    />
+                    {filteredPosts.map((post, index) => (
                         <div className="card my-3" key={index}>
                             <div className="card-header">
                                 <CategoriesRenderer categories={post.categories} />
@@ -38,7 +54,7 @@ export default function Posts() {
                                 <h5 className="card-title">{post.title.rendered}</h5>
                                 <div className="card-text" dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}></div>
                                 {post.author &&(
-                                    <strong>By: <Link to={`/author/${post.author}`}>{post.author}</Link></strong>                                    
+                                    <b>By: <Link to={`/users/${post.author}`}>{post.author}</Link></b>                                    
                                 )}
                                 <Link to={`/posts/${post.id}`} className="ms-3 btn btn-dark">Dettaglio</Link>
                             </div>

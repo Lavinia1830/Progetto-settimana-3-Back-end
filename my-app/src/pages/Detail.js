@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from '../Components/NavBar';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
+
 
 const urlAPI = 'http://localhost/progetto_settimana3_backend/wp/wp-json/wp/v2/';
 
@@ -40,11 +41,12 @@ export default function Detail() {
                             <div className="card-body">
                                 <h5 className="card-title">{post.title.rendered}</h5>
                                 <div className="card-text" dangerouslySetInnerHTML={{ __html: post.content.rendered }}></div>
+                                <p>{post.date}</p>
                                 {imageUrl && (
                                     <img src={imageUrl} className='w-100 mb-3' alt="Immagine" />
                                 )}
                                 {post.author && (
-                                    <strong>By: {post.author}</strong>
+                                    <b>By: <Link to={`/users/${post.author}`}>{post.author}</Link></b>
                                 )}
                             </div>
                         </div>
